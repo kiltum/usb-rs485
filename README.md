@@ -2,7 +2,7 @@
 
 Here is a small board for my home development purposes.
 
-- Able to download firmware thru USB
+- Able to download firmware through USB or ST-Link/V2 from discovery boards
 - Can act as USB to rs-485 adapter
 - Can act as USB/RS-485 thermometer
 - Can show one digit (or break it to 8 leds) for some purposes.
