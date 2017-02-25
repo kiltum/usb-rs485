@@ -65,6 +65,9 @@ void MX_GPIO_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 
+void dq_in(void);
+void dq_out(void);
+	 
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

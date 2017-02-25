@@ -48,6 +48,7 @@
 
 /* USER CODE BEGIN Includes */     
 #include "spi.h"
+#include "tim.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -65,6 +66,24 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
 
+volatile uint16_t mks=0;
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) 
+{
+	if (htim->Instance==TIM17)
+	{
+		if(mks>0) 
+			{
+				mks--;
+			}
+	}
+}
+
+void DelayMKS(uint16_t delay)
+{
+	mks=delay;
+	while(mks!=0) ;
+}
 /* USER CODE END FunctionPrototypes */
 
 /* Hook prototypes */
@@ -102,7 +121,15 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 }
 
-#define bin(a) ((( (a/10000000*128) + \
+/* StartDefaultTask function */
+void StartDefaultTask(void const * argument)
+{
+  /* init code for USB_DEVICE */
+  MX_USB_DEVICE_Init();
+
+  /* USER CODE BEGIN StartDefaultTask */
+	HAL_TIM_Base_Start_IT(&htim17);
+	#define bin(a) ((( (a/10000000*128) + \
 (((a/1000000)&1)*64) + \
 (((a/100000)&1)*32) + \
 (((a/10000)&1)*16) + \
@@ -118,13 +145,6 @@ void MX_FREERTOS_Init(void) {
 (((a/8)&1)*2) + \
 (a&1)) * (1-(a/10000000))))
 
-/* StartDefaultTask function */
-void StartDefaultTask(void const * argument)
-{
-  /* init code for USB_DEVICE */
-  MX_USB_DEVICE_Init();
-
-  /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
 	uint8_t buf[11];
 	buf[0]=bin(00111111);
@@ -143,13 +163,19 @@ void StartDefaultTask(void const * argument)
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
   for(;;)
   {
-		HAL_SPI_Transmit(&hspi1, &buf[n],1, 0x1000);
+		uint8_t s;
+		uint16_t q;
+		
+		s = buf[n];
+		HAL_SPI_Transmit(&hspi1, &s,1, 0x1000);
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
     osDelay(1);
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
 		n++;
 		if(n>9) n=0;
-		osDelay(500);
+		//osDelay(200);
+		for(q=0;q<1000;q++) 
+		DelayMKS(100); // 100 10th mks = 1 ms
   }
   /* USER CODE END StartDefaultTask */
 }

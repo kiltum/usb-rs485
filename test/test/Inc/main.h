@@ -53,8 +53,8 @@
 
 #define SPI_LATCH_Pin GPIO_PIN_4
 #define SPI_LATCH_GPIO_Port GPIOA
-#define SPI_DE_Pin GPIO_PIN_1
-#define SPI_DE_GPIO_Port GPIOB
+#define SPI_DE_Pin GPIO_PIN_6
+#define SPI_DE_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

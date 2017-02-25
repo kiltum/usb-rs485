@@ -32,6 +32,7 @@
 "test\usbd_desc.o"
 "test\stm32f0xx_hal_msp.o"
 "test\freertos.o"
+"test\tim.o"
 "test\usbd_ioreq.o"
 "test\usbd_cdc.o"
 "test\usbd_core.o"
