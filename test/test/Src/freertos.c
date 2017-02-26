@@ -49,6 +49,7 @@
 /* USER CODE BEGIN Includes */     
 #include "spi.h"
 #include "tim.h"
+#include "stm32f0xx_hal.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -84,6 +85,9 @@ void DelayMKS(uint16_t delay)
 	mks=delay;
 	while(mks!=0) ;
 }
+
+
+
 /* USER CODE END FunctionPrototypes */
 
 /* Hook prototypes */
@@ -174,6 +178,7 @@ void StartDefaultTask(void const * argument)
 		n++;
 		if(n>9) n=0;
 		//osDelay(200);
+		s=SystemCoreClock;
 		for(q=0;q<1000;q++) 
 		DelayMKS(100); // 100 10th mks = 1 ms
   }
