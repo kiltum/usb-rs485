@@ -14,8 +14,8 @@ Here is a small board for my home development purposes.
 
 - (DONE) Create schematics
 - (DONE) Create board 
-- (IN PROGRESS) Order boards
-- (IN PROGRESS) Order materials
-- Assemble board
-- To boast
+- (DONE) Order boards
+- (DONE) Order materials
+- (DONE) Assemble board
+- (DONE) To boast
 - Write firmware 
