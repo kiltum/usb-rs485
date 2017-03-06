@@ -9,6 +9,7 @@ Here is a small board for my home development purposes.
 - Can be powered from USB or from RS-485 bus. 
 
 ![alt text](https://raw.githubusercontent.com/kiltum/usb-rs485/master/3d_view.png "How it should look")
+![alt text](https://raw.githubusercontent.com/kiltum/usb-rs485/master/real.jpg "How it look in real")
 
 # Current status
 
@@ -17,5 +18,5 @@ Here is a small board for my home development purposes.
 - (DONE) Order boards
 - (DONE) Order materials
 - (DONE) Assemble board
-- (DONE) To boast
-- Write firmware 
+- (DONE) To boast (you can look at video.m4v)
+- (IN PROG) Write firmware. Take a piece of code. I use this board for internal purposes, so all in your hands  
