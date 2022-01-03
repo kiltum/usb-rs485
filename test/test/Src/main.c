@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -53,7 +52,6 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
@@ -96,17 +94,42 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM17_Init();
   MX_USART2_UART_Init();
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
+#define bin(a) ((( (a/10000000*128) + \
+(((a/1000000)&1)*64) + \
+(((a/100000)&1)*32) + \
+(((a/10000)&1)*16) + \
+(((a/1000)&1)*8) + \
+(((a/100)&1)*4) + \
+(((a/10)&1)*2) + \
+(a&1)) * (a/10000000)) + \
+(( ((a/262144)*64) + \
+(((a/32768)&1)*32) + \
+(((a/4096)&1)*16) + \
+(((a/512)&1)*8) + \
+(((a/64)&1)*4) + \
+(((a/8)&1)*2) + \
+(a&1)) * (1-(a/10000000))))
 
+  /* Infinite loop */
+  uint8_t buf[11];
+  buf[0]=bin(00111111);
+  buf[1]=bin(00000110);
+  buf[2]=bin(01011011);
+  buf[3]=bin(01001111);
+  buf[4]=bin(01100110);
+  buf[5]=bin(01101101);
+  buf[6]=bin(01111101);
+  buf[7]=bin(00000111);
+  buf[8]=bin(01111111);
+  buf[9]=bin(01101111);
+  buf[10]=0;
+  uint8_t n,s;
+  n=0;
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
   /* USER CODE END 2 */
 
-  /* Init scheduler */
-  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
-  /* Start scheduler */
-  osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -114,6 +137,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    s = buf[n];
+    HAL_SPI_Transmit(&hspi1, &s,1, 0x1000);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+    HAL_Delay(500);
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+    n++;
+    if(n>9) n=0;
 
   }
   /* USER CODE END 3 */
