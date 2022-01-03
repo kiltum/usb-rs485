@@ -2,8 +2,6 @@
   ******************************************************************************
   * @file    stm32f0xx_hal_rcc_ex.c
   * @author  MCD Application Team
-  * @version V1.4.0
-  * @date    27-May-2016
   * @brief   Extended RCC HAL module driver.
   *          This file provides firmware functions to manage the following 
   *          functionalities RCC extension peripheral:
@@ -13,32 +11,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************  
-  */ 
+  ******************************************************************************
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
@@ -121,8 +103,8 @@
   */
 HAL_StatusTypeDef HAL_RCCEx_PeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
 {
-  uint32_t tickstart = 0;
-  uint32_t temp_reg = 0;
+  uint32_t tickstart = 0U;
+  uint32_t temp_reg = 0U;
 
   /* Check the parameters */
   assert_param(IS_RCC_PERIPHCLOCK(PeriphClkInit->PeriphClockSelection));
@@ -387,10 +369,12 @@ void HAL_RCCEx_GetPeriphCLKConfig(RCC_PeriphCLKInitTypeDef  *PeriphClkInit)
   */
 uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
 {
-  uint32_t frequency = 0;
-  uint32_t srcclk = 0;
+  /* frequency == 0 : means that no available frequency for the peripheral */
+  uint32_t frequency = 0U;
+  
+  uint32_t srcclk = 0U;
 #if defined(USB)
-  uint32_t pllmull = 0, pllsource = 0, predivfactor = 0;
+  uint32_t pllmull = 0U, pllsource = 0U, predivfactor = 0U;
 #endif /* USB */
 
   /* Check the parameters */
@@ -416,12 +400,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       /* Check if HSE is ready  and if RTC clock selection is HSI_DIV32*/
       else if ((srcclk == RCC_RTCCLKSOURCE_HSE_DIV32) && (HAL_IS_BIT_SET(RCC->CR, RCC_CR_HSERDY)))
       {
-        frequency = HSE_VALUE / 32;
-      }
-      /* Clock not enabled for RTC*/
-      else
-      {
-        frequency = 0;
+        frequency = HSE_VALUE / 32U;
       }
       break;
     }
@@ -450,11 +429,6 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       {
         frequency = LSE_VALUE;
       }
-      /* Clock not enabled for USART1*/
-      else
-      {
-        frequency = 0;
-      }
       break;
     }
 #if defined(RCC_CFGR3_USART2SW)
@@ -482,11 +456,6 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       else if ((srcclk == RCC_USART2CLKSOURCE_LSE) && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSERDY)))
       {
         frequency = LSE_VALUE;
-      }
-      /* Clock not enabled for USART2*/
-      else
-      {
-        frequency = 0;
       }
       break;
     }
@@ -517,11 +486,6 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       {
         frequency = LSE_VALUE;
       }
-      /* Clock not enabled for USART3*/
-      else
-      {
-        frequency = 0;
-      }
       break;
     }
 #endif /* RCC_CFGR3_USART3SW */
@@ -540,11 +504,6 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       {
         frequency = HAL_RCC_GetSysClockFreq();
       }
-      /* Clock not enabled for I2C1*/
-      else
-      {
-        frequency = 0;
-      }
       break;
     }
 #if defined(USB)
@@ -559,8 +518,8 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         /* Get PLL clock source and multiplication factor ----------------------*/
         pllmull      = RCC->CFGR & RCC_CFGR_PLLMUL;
         pllsource    = RCC->CFGR & RCC_CFGR_PLLSRC;
-        pllmull      = (pllmull >> RCC_CFGR_PLLMUL_BITNUMBER) + 2;
-        predivfactor = (RCC->CFGR2 & RCC_CFGR2_PREDIV) + 1;
+        pllmull      = (pllmull >> RCC_CFGR_PLLMUL_BITNUMBER) + 2U;
+        predivfactor = (RCC->CFGR2 & RCC_CFGR2_PREDIV) + 1U;
 
         if (pllsource == RCC_CFGR_PLLSRC_HSE_PREDIV)
         {
@@ -580,8 +539,8 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
           /* HSI used as PLL clock source : frequency = HSI/PREDIV * PLLMUL */
           frequency = (HSI_VALUE / predivfactor) * pllmull;
 #else
-          /* HSI used as PLL clock source : frequency = HSI/2 * PLLMUL */
-          frequency = (HSI_VALUE >> 1) * pllmull;
+          /* HSI used as PLL clock source : frequency = HSI/2U * PLLMUL */
+          frequency = (HSI_VALUE >> 1U) * pllmull;
 #endif /* STM32F042x6 || STM32F048xx || STM32F072xB || STM32F078xx || STM32F070xB */
         }
       }
@@ -592,11 +551,6 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
         frequency = HSI48_VALUE;
       }
 #endif /* RCC_CR2_HSI48ON */
-      /* Clock not enabled for USB*/
-      else
-      {
-        frequency = 0;
-      }
       break;
     }
 #endif /* USB */
@@ -615,11 +569,6 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
       else if ((srcclk == RCC_CECCLKSOURCE_LSE) && (HAL_IS_BIT_SET(RCC->BDCR, RCC_BDCR_LSERDY)))
       {
         frequency = LSE_VALUE;
-      }
-      /* Clock not enabled for CEC */
-      else
-      {
-        frequency = 0;
       }
       break;
     }
@@ -646,7 +595,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
                 ##### Extended Clock Recovery System Control functions  #####
  ===============================================================================
     [..]
-      For devices with Clock Recovery System feature (CRS), RCC Extention HAL driver can be used as follows:
+      For devices with Clock Recovery System feature (CRS), RCC Extension HAL driver can be used as follows:
 
       (#) In System clock config, HSI48 needs to be enabled
 
@@ -656,9 +605,9 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
           (##) Prepare synchronization configuration necessary for HSI48 calibration
               (+++) Default values can be set for frequency Error Measurement (reload and error limit)
                         and also HSI48 oscillator smooth trimming.
-              (+++) Macro @ref __HAL_RCC_CRS_RELOADVALUE_CALCULATE can be also used to calculate 
+              (+++) Macro __HAL_RCC_CRS_RELOADVALUE_CALCULATE can be also used to calculate 
                         directly reload value with target and synchronization frequencies values
-          (##) Call function @ref HAL_RCCEx_CRSConfig which
+          (##) Call function HAL_RCCEx_CRSConfig which
               (+++) Reset CRS registers to their default values.
               (+++) Configure CRS registers with synchronization configuration 
               (+++) Enable automatic calibration and frequency error counter feature
@@ -669,12 +618,12 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
            should be used as SYNC signal.
 
           (##) A polling function is provided to wait for complete synchronization
-              (+++) Call function @ref HAL_RCCEx_CRSWaitSynchronization()
+              (+++) Call function HAL_RCCEx_CRSWaitSynchronization()
               (+++) According to CRS status, user can decide to adjust again the calibration or continue
                         application if synchronization is OK
               
       (#) User can retrieve information related to synchronization in calling function
-            @ref HAL_RCCEx_CRSGetSynchronizationInfo()
+            HAL_RCCEx_CRSGetSynchronizationInfo()
 
       (#) Regarding synchronization status and synchronization information, user can try a new calibration
            in changing synchronization configuration and call again HAL_RCCEx_CRSConfig.
@@ -685,18 +634,18 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
 
       (#) In interrupt mode, user can resort to the available macros (__HAL_RCC_CRS_XXX_IT). Interrupts will go 
           through CRS Handler (RCC_IRQn/RCC_IRQHandler)
-              (++) Call function @ref HAL_RCCEx_CRSConfig()
+              (++) Call function HAL_RCCEx_CRSConfig()
               (++) Enable RCC_IRQn (thanks to NVIC functions)
-              (++) Enable CRS interrupt (@ref __HAL_RCC_CRS_ENABLE_IT)
+              (++) Enable CRS interrupt (__HAL_RCC_CRS_ENABLE_IT)
               (++) Implement CRS status management in the following user callbacks called from 
                    HAL_RCCEx_CRS_IRQHandler():
-                   (+++) @ref HAL_RCCEx_CRS_SyncOkCallback()
-                   (+++) @ref HAL_RCCEx_CRS_SyncWarnCallback()
-                   (+++) @ref HAL_RCCEx_CRS_ExpectedSyncCallback()
-                   (+++) @ref HAL_RCCEx_CRS_ErrorCallback()
+                   (+++) HAL_RCCEx_CRS_SyncOkCallback()
+                   (+++) HAL_RCCEx_CRS_SyncWarnCallback()
+                   (+++) HAL_RCCEx_CRS_ExpectedSyncCallback()
+                   (+++) HAL_RCCEx_CRS_ErrorCallback()
 
-      (#) To force a SYNC EVENT, user can use the function @ref HAL_RCCEx_CRSSoftwareSynchronizationGenerate().
-          This function can be called before calling @ref HAL_RCCEx_CRSConfig (for instance in Systick handler)
+      (#) To force a SYNC EVENT, user can use the function HAL_RCCEx_CRSSoftwareSynchronizationGenerate().
+          This function can be called before calling HAL_RCCEx_CRSConfig (for instance in Systick handler)
             
 @endverbatim
  * @{
@@ -709,7 +658,7 @@ uint32_t HAL_RCCEx_GetPeriphCLKFreq(uint32_t PeriphClk)
   */
 void HAL_RCCEx_CRSConfig(RCC_CRSInitTypeDef *pInit)
 {
-  uint32_t value = 0;
+  uint32_t value = 0U;
   
   /* Check the parameters */
   assert_param(IS_RCC_CRS_SYNC_DIV(pInit->Prescaler));
