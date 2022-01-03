@@ -140,8 +140,9 @@ int main(void)
     s = buf[n];
     HAL_SPI_Transmit(&hspi1, &s,1, 0x1000);
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
-    HAL_Delay(500);
+    HAL_Delay(1);
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+    HAL_Delay(500);
     n++;
     if(n>9) n=0;
 
