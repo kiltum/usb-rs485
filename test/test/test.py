@@ -4,8 +4,9 @@ import serial
 # f042
 #ser = serial.Serial(port='/dev/cu.usbmodem2058335047481')
 # f303
-ser = serial.Serial(port='/dev/cu.usbmodem2057385756311')
-
+#ser = serial.Serial(port='/dev/cu.usbmodem2057385756311')
+# F779
+ser = serial.Serial(port='/dev/cu.usbmodem3959356533361')
 ser.isOpen()
 # For windows
 #ser.set_buffer_size(rx_size=262144, tx_size=262144)
